@@ -93,7 +93,7 @@ view model =
         controlDiv =
             let
                 labelAttrs =
-                    [ style "margin" "10px" ]
+                    [ style "margin-right" "10px" ]
 
                 inputAttrs val msg =
                     [ Attrs.size 5
@@ -134,13 +134,7 @@ view model =
                 ]
     in
     div []
-        ([ controlDiv
-         , statusDiv
-
-         --, grid_frame
-         ]
-            ++ drawGrid model.grid
-        )
+        ([ controlDiv, statusDiv ] ++ drawGrid model.grid)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
