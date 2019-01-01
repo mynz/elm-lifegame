@@ -14,7 +14,6 @@ type alias Model =
     { counter : Int
     , cellSizes : ( Int, Int )
     , grid : Grid
-    , lastSelectedCell : ( Int, Int )
     }
 
 
@@ -32,7 +31,11 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model 0 ( 10, 10 ) makeGrid ( 0, 0 ), Cmd.none )
+    let
+        sizes =
+            ( 10, 10 )
+    in
+    ( Model 0 sizes (makeGrid sizes False), Cmd.none )
 
 
 drawGrid : Grid -> List (Html Msg)
@@ -166,9 +169,6 @@ update msg model =
                     update OnStep model
 
                 "Enter" ->
-                    update OnStep model
-
-                "r" ->
                     update RandomGrid model
 
                 _ ->

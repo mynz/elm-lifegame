@@ -11,16 +11,12 @@ type alias Grid =
     List CellLine
 
 
-makeGrid : Grid
-makeGrid =
-    mapGrid (\i -> i /= 0)
-        [ [ 0, 0, 0, 1, 0, 0 ]
-        , [ 0, 0, 0, 0, 1, 0 ]
-        , [ 0, 1, 0, 1, 0, 0 ]
-        , [ 1, 0, 1, 0, 1, 0 ]
-        , [ 0, 0, 0, 1, 0, 0 ]
-        , [ 0, 0, 0, 1, 0, 0 ]
-        ]
+makeGrid sizes b =
+    let
+        ( x, y ) =
+            sizes
+    in
+    List.repeat y <| List.repeat x b
 
 
 randomGrid : ( Int, Int ) -> Generator Grid
