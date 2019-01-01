@@ -90,7 +90,7 @@ view model =
         ( rowSize, colSize ) =
             model.cellSizes
 
-        control_frame =
+        controlDiv =
             let
                 labelAttrs =
                     [ style "margin" "10px" ]
@@ -134,20 +134,20 @@ view model =
                     ]
                 ]
 
-        status_frame =
+        statusDiv =
             let
-                sizeText =
-                    "x: " ++ String.fromInt rowSize ++ ", y:  " ++ String.fromInt colSize
+                textSteps =
+                    "steps: " ++ String.fromInt model.counter
             in
             div []
-                [ div [] [ text "Status" ]
-                , span [] [ text sizeText ]
+                [ text "Status"
+                , div [ style "text-indent" "1em" ] [ text textSteps ]
                 ]
     in
     div []
-        ([ control_frame
+        ([ controlDiv
+         , statusDiv
 
-         {- , status_frame -}
          --, grid_frame
          ]
             ++ drawGrid model.grid
