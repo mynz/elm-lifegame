@@ -101,9 +101,9 @@ view model =
                     , onInput msg
                     ]
 
-                cellSizeControl =
+                sizeInputDiv =
                     div
-                        []
+                        [ style "text-indent" "1em" ]
                         [ label labelAttrs
                             [ text "width: "
                             , input
@@ -119,18 +119,7 @@ view model =
             div []
                 [ div []
                     [ text "Control"
-                    , div []
-                        [ button [ onClick OnStep ] [ text "Step" ]
-                        , button [ onClick RandomGrid ] [ text "Random" ]
-                        , span [] [ text (String.fromInt model.counter) ]
-                        , span
-                            [ onClick RandomGrid
-                            , style "color" "blue"
-                            , style "background-color" "yellow"
-                            ]
-                            [ text "Clickable" ]
-                        , cellSizeControl
-                        ]
+                    , sizeInputDiv
                     ]
                 ]
 
