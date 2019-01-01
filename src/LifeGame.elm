@@ -40,31 +40,49 @@ init _ =
 
 drawGrid : Grid -> List (Html Msg)
 drawGrid grid =
-    -- TODO: リファクタリングするべし!
     let
-        colFun rowIndex colIndex cell =
+        fnCell y x e =
             let
-                onClickAttr =
-                    onClick <| ClickOnCell colIndex rowIndex
+                styleCommon =
+                    [ style "padding" "0px"
+                    , style "width" "30px"
+                    , style "height" "30px"
+                    , style "text-align" "center"
+                    , style "vertical-align" "middle"
+                    , style "border" "solid"
+                    , style "border-width" "thin"
+                    , style "background-color" "red"
+                    , onClick <| ClickOnCell x y
+                    ]
 
-                drawCell color t =
-                    span [ style "background-color" color, onClickAttr ] [ text t ]
+                styleTrue =
+                    [ style "background" "red"
+                    ]
+
+                styleFalse =
+                    [ style "background" "white"
+                    ]
             in
-            if cell then
-                drawCell "red" "●"
+            if e then
+                Html.td (styleCommon ++ styleTrue) [ text "o" ]
 
             else
-                drawCell "blue" "\u{3000}"
+                Html.td (styleCommon ++ styleFalse) [ text "x" ]
 
-        rowFun : Grid -> List (Html Msg)
-        rowFun rows =
-            let
-                fn rowIndex row =
-                    div [] (List.indexedMap (colFun rowIndex) row)
-            in
-            List.indexedMap fn rows
+        fnRow y e =
+            Html.tr [] <| List.indexedMap (fnCell y) e
+
+        rows =
+            List.indexedMap fnRow grid
+
+        table =
+            Html.table
+                [ style "border-collapse" "collapse"
+                , style "table-layout" "fixed"
+                ]
+                rows
     in
-    rowFun grid
+    [ table ]
 
 
 view model =
