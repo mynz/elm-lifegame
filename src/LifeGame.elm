@@ -3,7 +3,7 @@ module LifeGame exposing (Model, Msg(..), drawGrid, init, main, subscriptions, u
 import Browser
 import Browser.Events
 import Grid exposing (..)
-import Html exposing (Html, button, div, input, option, select, span, text)
+import Html exposing (Html, button, div, input, label, option, select, span, text)
 import Html.Attributes as Attrs exposing (..)
 import Html.Events as Events exposing (on, onClick, onInput)
 import Json.Decode as Decode exposing (..)
@@ -91,6 +91,31 @@ view model =
             model.cellSizes
 
         control_frame =
+            let
+                labelAttrs =
+                    [ style "margin" "10px" ]
+
+                inputAttrs val msg =
+                    [ Attrs.size 5
+                    , Attrs.value <| String.fromInt val
+                    , onInput msg
+                    ]
+
+                cellSizeControl =
+                    div
+                        []
+                        [ label labelAttrs
+                            [ text "width: "
+                            , input
+                                (inputAttrs rowSize ChanegCellSizeRow)
+                                []
+                            ]
+                        , label labelAttrs
+                            [ text "height: "
+                            , input (inputAttrs colSize ChanegCellSizeCol) []
+                            ]
+                        ]
+            in
             div []
                 [ div []
                     [ text "Control"
@@ -104,11 +129,7 @@ view model =
                             , style "background-color" "yellow"
                             ]
                             [ text "Clickable" ]
-                        , div
-                            []
-                            [ input [ Attrs.value (String.fromInt rowSize), onInput ChanegCellSizeRow ] []
-                            , input [ Attrs.value (String.fromInt colSize), onInput ChanegCellSizeCol ] []
-                            ]
+                        , cellSizeControl
                         ]
                     ]
                 ]
@@ -116,17 +137,21 @@ view model =
         status_frame =
             let
                 sizeText =
-                    "X: " ++ String.fromInt rowSize ++ ", y:  " ++ String.fromInt colSize
+                    "x: " ++ String.fromInt rowSize ++ ", y:  " ++ String.fromInt colSize
             in
             div []
                 [ div [] [ text "Status" ]
                 , span [] [ text sizeText ]
                 ]
-
-        grid_frame =
-            div [] [ text "Grid" ]
     in
-    div [] ([ control_frame, status_frame, grid_frame ] ++ drawGrid model.grid)
+    div []
+        ([ control_frame
+
+         {- , status_frame -}
+         --, grid_frame
+         ]
+            ++ drawGrid model.grid
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
