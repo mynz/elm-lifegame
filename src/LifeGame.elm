@@ -3,7 +3,7 @@ module LifeGame exposing (Model, Msg(..), drawGrid, init, main, subscriptions, u
 import Browser
 import Browser.Events
 import Grid exposing (..)
-import Html exposing (Html, button, div, input, label, option, select, span, text)
+import Html exposing (Html, button, div, fieldset, input, label, legend, span, text)
 import Html.Attributes as Attrs exposing (..)
 import Html.Events as Events exposing (on, onClick, onInput)
 import Json.Decode as Decode exposing (..)
@@ -103,7 +103,7 @@ view model =
                     ]
 
                 sizeInputDiv =
-                    div [ style "text-indent" "1em" ]
+                    div []
                         [ label rightMargin
                             [ text "width: "
                             , input
@@ -117,15 +117,15 @@ view model =
                         ]
 
                 buttonDiv =
-                    div [ style "text-indent" "1em" ]
+                    div []
                         [ button (rightMargin ++ [ onClick OnStep ]) [ text "Step [space key]" ]
                         , button (rightMargin ++ [ onClick Clear ]) [ text "Clear ['c' key]" ]
                         , button (rightMargin ++ [ onClick RandomGrid ]) [ text "Randomize [enter key]" ]
                         ]
             in
             div []
-                [ div []
-                    [ text "Control"
+                [ fieldset []
+                    [ legend [] [ text "Control" ]
                     , buttonDiv
                     , sizeInputDiv
                     ]
@@ -136,13 +136,13 @@ view model =
                 textSteps =
                     "steps: " ++ String.fromInt model.counter
             in
-            div []
-                [ text "Status"
-                , div [ style "text-indent" "1em" ] [ text textSteps ]
+            fieldset []
+                [ legend [] [ text "Status" ]
+                , div [] [ text textSteps ]
                 ]
     in
     div []
-        ([ controlDiv, statusDiv ] ++ drawGrid model.grid)
+        ([ controlDiv, statusDiv, Html.p [] [] ] ++ drawGrid model.grid)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
