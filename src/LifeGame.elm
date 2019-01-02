@@ -20,6 +20,7 @@ type alias Model =
 type Msg
     = NoOp
     | OnStep
+    | Clear
     | RandomGrid
     | NewGrid Grid
     | ChanegCellSizeRow String
@@ -92,7 +93,7 @@ view model =
 
         controlDiv =
             let
-                labelAttrs =
+                rightMargin =
                     [ style "margin-right" "10px" ]
 
                 inputAttrs val msg =
@@ -102,23 +103,30 @@ view model =
                     ]
 
                 sizeInputDiv =
-                    div
-                        [ style "text-indent" "1em" ]
-                        [ label labelAttrs
+                    div [ style "text-indent" "1em" ]
+                        [ label rightMargin
                             [ text "width: "
                             , input
                                 (inputAttrs rowSize ChanegCellSizeRow)
                                 []
                             ]
-                        , label labelAttrs
+                        , label rightMargin
                             [ text "height: "
                             , input (inputAttrs colSize ChanegCellSizeCol) []
                             ]
+                        ]
+
+                buttonDiv =
+                    div [ style "text-indent" "1em" ]
+                        [ button (rightMargin ++ [ onClick OnStep ]) [ text "Step [space key]" ]
+                        , button (rightMargin ++ [ onClick Clear ]) [ text "Clear ['c' key]" ]
+                        , button (rightMargin ++ [ onClick RandomGrid ]) [ text "Randomize [enter key]" ]
                         ]
             in
             div []
                 [ div []
                     [ text "Control"
+                    , buttonDiv
                     , sizeInputDiv
                     ]
                 ]
@@ -150,6 +158,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        Clear ->
+            init ()
 
         RandomGrid ->
             ( model, Random.generate NewGrid (Grid.randomGrid model.cellSizes) )
@@ -196,6 +207,9 @@ update msg model =
 
                 "Enter" ->
                     update RandomGrid model
+
+                "c" ->
+                    update Clear model
 
                 _ ->
                     ( model, Cmd.none )
