@@ -23,11 +23,15 @@ type Msg
     | Clear
     | RandomGrid
     | NewGrid Grid
-    | ChanegCellSizeRow String
-    | ChanegCellSizeCol String
+    | ChanegCellSizeString Dimension String
     | ChanegCellSizes ( Int, Int )
     | ClickOnCell Int Int
     | OnKey String
+
+
+type Dimension
+    = Row
+    | Column
 
 
 init : () -> ( Model, Cmd Msg )
@@ -107,12 +111,12 @@ view model =
                         [ label rightMargin
                             [ text "width: "
                             , input
-                                (inputAttrs rowSize ChanegCellSizeRow)
+                                (inputAttrs rowSize <| ChanegCellSizeString Row)
                                 []
                             ]
                         , label rightMargin
                             [ text "height: "
-                            , input (inputAttrs colSize ChanegCellSizeCol) []
+                            , input (inputAttrs colSize <| ChanegCellSizeString Column) []
                             ]
                         , span rightMargin
                             [ "steps: " ++ String.fromInt model.counter |> text
@@ -164,29 +168,24 @@ update msg model =
         ClickOnCell x y ->
             ( { model | grid = Grid.toggleCell x y model.grid }, Cmd.none )
 
-        ChanegCellSizeRow sizeStr ->
+        ChanegCellSizeString dim sizeStr ->
             let
                 ( origX, origY ) =
                     model.cellSizes
 
-                newX =
-                    Maybe.withDefault origX (String.toInt sizeStr)
+                newSize =
+                    String.toInt sizeStr
+
+                ( newX, newY ) =
+                    case dim of
+                        Row ->
+                            ( Maybe.withDefault origX newSize, origY )
+
+                        Column ->
+                            ( origX, Maybe.withDefault origY newSize )
 
                 newSizes =
-                    ( newX, origY )
-            in
-            update (ChanegCellSizes newSizes) model
-
-        ChanegCellSizeCol sizeStr ->
-            let
-                ( origX, origY ) =
-                    model.cellSizes
-
-                newY =
-                    Maybe.withDefault origY (String.toInt sizeStr)
-
-                newSizes =
-                    ( origX, newY )
+                    ( newX, newY )
             in
             update (ChanegCellSizes newSizes) model
 
