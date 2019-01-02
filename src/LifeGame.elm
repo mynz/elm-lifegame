@@ -102,7 +102,7 @@ view model =
                     , onInput msg
                     ]
 
-                sizeInputDiv =
+                secondaryDiv =
                     div []
                         [ label rightMargin
                             [ text "width: "
@@ -113,6 +113,9 @@ view model =
                         , label rightMargin
                             [ text "height: "
                             , input (inputAttrs colSize ChanegCellSizeCol) []
+                            ]
+                        , span rightMargin
+                            [ "steps: " ++ String.fromInt model.counter |> text
                             ]
                         ]
 
@@ -127,22 +130,12 @@ view model =
                 [ fieldset []
                     [ legend [] [ text "Control" ]
                     , buttonDiv
-                    , sizeInputDiv
+                    , secondaryDiv
                     ]
-                ]
-
-        statusDiv =
-            let
-                textSteps =
-                    "steps: " ++ String.fromInt model.counter
-            in
-            fieldset []
-                [ legend [] [ text "Status" ]
-                , div [] [ text textSteps ]
                 ]
     in
     div []
-        ([ controlDiv, statusDiv, Html.p [] [] ] ++ drawGrid model.grid)
+        ([ controlDiv, Html.p [] [] ] ++ drawGrid model.grid)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
